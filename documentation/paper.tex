@@ -1,0 +1,201 @@
+\documentclass[10pt,a4paper,twocolumn]{article}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{mathtools}
+\usepackage{geometry}
+\usepackage[hidelinks]{hyperref}
+\geometry{margin=0.75in}
+\setlength{\columnsep}{0.25in}
+\usepackage{parskip}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage[raggedright]{titlesec}
+\titlelabel{\thetitle.\hspace{0.5em}}
+% abstract heading: centred, normal size
+\renewenvironment{abstract}{\par\centerline{\bfseries Abstract}\par\vspace{0.3em}}{\par\vspace{0.5em}}
+% full-width tables: fill pages from the top, allow more of them next to text
+\makeatletter
+\setlength{\@dblfptop}{0pt}
+\setlength{\@dblfpsep}{14pt}
+\setlength{\@dblfpbot}{0pt plus 1fil}
+\makeatother
+\setcounter{dbltopnumber}{3}
+\renewcommand{\dbltopfraction}{0.85}
+\renewcommand{\dblfloatpagefraction}{0.6}
+\captionsetup[table]{font=small,labelfont=bf,skip=6pt,position=below}
+\newsavebox{\captabbox}
+\newlength{\captabwidth}
+% table with its caption below, the caption as wide as the table (at least 0.6\linewidth)
+\newenvironment{captab}[1]{\def\captabtext{#1}\begin{lrbox}{\captabbox}}{\end{lrbox}\setlength{\captabwidth}{\wd\captabbox}\ifdim\captabwidth<0.6\linewidth\setlength{\captabwidth}{0.6\linewidth}\fi\begin{minipage}{\captabwidth}\centering\usebox{\captabbox}\captionof{table}{\captabtext}\end{minipage}}
+
+\newcommand{\R}{\mathbb{R}}
+
+\begin{document}
+
+	$p = \mathbb{P}(z = 1)$ is the fraction of behavior prompts. $\delta = \mu_1 - \mu_0$ is the difference of the class means, where $\mu_i = \mathbb{E}[x \mid z = i]$. $\mathrm{Cov}(x, z)$ is the cross-covariance, a vector in $\R^d$. $z \in \{0, 1\}$, where $z = 0$ is a neutral prompt and $z = 1$ is a behavior prompt, so $z \sim \mathrm{Bernoulli}(p)$.
+
+	$$\begin{aligned}
+		\mathrm{Cov}(x, z) & = \mathbb{E} \left[ (x - \mathbb{E}[x]) (z - \mathbb{E}[z]) \right] \\
+		& = \mathbb{E}[x z] - \mathbb{E}[x] \mathbb{E}[z]
+	\end{aligned}$$
+
+	$$\mathbb{E}[z] = 1 \cdot p + 0 \cdot (1 - p) = p$$
+
+	$$\begin{aligned}
+		\mathbb{E}[x] & = \mathbb{P}(z = 1) \mathbb{E}[x \mid z = 1] + \mathbb{P}(z = 0) \mathbb{E}[x \mid z = 0] \\
+		& = p \mathbb{E}[x \mid z = 1] + (1 - p) \mathbb{E}[x \mid z = 0] \\
+		& = p \mu_1 + (1 - p) \mu_0 = \mu
+	\end{aligned}$$
+
+	$$\begin{aligned}
+		\mathbb{E}[x z] & = p \mathbb{E}[x z \mid z = 1] + (1 - p) \mathbb{E}[x z \mid z = 0] \\
+		& = p \mu_1 ,
+	\end{aligned}$$
+	since the second term is $0$.
+
+	$$\mathrm{Cov}(x, z) = \mathbb{E}[x z] - \mathbb{E}[x] \mathbb{E}[z] = p \mu_1 - \mu p = p (\mu_1 - \mu)$$
+
+	Since $\mu = p \mu_1 + (1 - p) \mu_0$,
+	$$\begin{aligned}
+		p (\mu_1 - \mu) & = p \left( \mu_1 - p \mu_1 - (1 - p) \mu_0 \right) \\
+		& = p (1 - p) (\mu_1 - \mu_0) = p (1 - p) \delta ,
+	\end{aligned}$$
+	so
+	$$\mathrm{Cov}(x, z) = p (1 - p) \delta$$
+
+	By the law of total covariance,
+	$$\begin{aligned}
+		\mathrm{Cov}(x) = {} & p \mathrm{Cov}(x \mid z = 1) + (1 - p) \mathrm{Cov}(x \mid z = 0) \\
+		& + \mathrm{Cov}(\mathbb{E}[x \mid z])
+	\end{aligned}$$
+
+	$$\mathbb{E}_z \left[ \mathbb{E}[x \mid z] \right] = (1 - p) \mu_0 + p \mu_1 = \mu$$
+
+	$$\begin{aligned}
+		\mu_0 - \mu & = p (\mu_0 - \mu_1) , \\
+		\mu_1 - \mu & = (1 - p) (\mu_1 - \mu_0)
+	\end{aligned}$$
+
+	$$\begin{aligned}
+		\mathrm{Cov}(\mathbb{E}[x \mid z]) = {} & \mathbb{P}(z = 0) (\mu_0 - \mu) (\mu_0 - \mu)^\top \\
+		& + \mathbb{P}(z = 1) (\mu_1 - \mu) (\mu_1 - \mu)^\top \\
+		= {} & (1 - p) p^2 (\mu_0 - \mu_1) (\mu_0 - \mu_1)^\top \\
+		& + p (1 - p)^2 (\mu_1 - \mu_0) (\mu_1 - \mu_0)^\top \\
+		= {} & \left( (1 - p) p^2 + p (1 - p)^2 \right) \delta \delta^\top \\
+		= {} & p (1 - p) \left( p + (1 - p) \right) \delta \delta^\top \\
+		= {} & p (1 - p) \delta \delta^\top
+	\end{aligned}$$
+
+	So
+	$$\mathrm{Cov}(x) = \mathbb{E}_z \left[ \mathrm{Cov}(x \mid z) \right] + p (1 - p) \delta \delta^\top ,$$
+	where
+	$$\begin{aligned}
+		\mathbb{E}_z \left[ \mathrm{Cov}(x \mid z) \right] = {} & p \mathrm{Cov}(x \mid z = 1) \\
+		& + (1 - p) \mathrm{Cov}(x \mid z = 0)
+	\end{aligned}$$
+
+	If $\mathrm{Cov}(x) \in \mathrm{GL}_d(\R)$, its range is all of $\R^d$, but it can be singular (for example, with fewer samples than dimensions). If $\mathrm{Cov}(x) v = 0$ for some $v$, then $\delta^\top v = 0$, so
+	$$\delta \in \mathrm{range}(\mathrm{Cov}(x)) = \{ \mathrm{Cov}(x) u : u \in \R^d \}$$
+	A system $A u = y$ is solvable if and only if $y \in \mathrm{range}(A)$, so I need to check whether $\delta \in \mathrm{range}(\mathrm{Cov}(x))$.
+
+	Well, we know that $\mathrm{Cov}(x)$ is symmetric, so its range is the orthogonal complement of its kernel:
+	$$\mathrm{range}(\mathrm{Cov}(x)) = \ker(\mathrm{Cov}(x))^\perp ,$$
+	so we need to show that $v^\top \delta = 0$ for all $v \in \ker(\mathrm{Cov}(x))$.
+
+	Assume $\mathrm{Cov}(x) v = 0$. Then
+	$$\begin{aligned}
+		0 & = v^\top \mathrm{Cov}(x) v \\
+		& = v^\top \mathbb{E}_z \left[ \mathrm{Cov}(x \mid z) \right] v + p (1 - p) (v^\top \delta)^2
+	\end{aligned}$$
+	$\mathbb{E}_z \left[ \mathrm{Cov}(x \mid z) \right]$ is a weighted sum of two covariance matrices with non-negative weights, so it is positive semi-definite, and $v^\top \mathbb{E}_z \left[ \mathrm{Cov}(x \mid z) \right] v \ge 0$. Since $p (1 - p) > 0$, we have $p (1 - p) (v^\top \delta)^2 \ge 0$. Both terms are non-negative, so for them to sum up to $0$, both must be $0$. Hence $v^\top \delta = 0$, and $\delta \in \mathrm{range}(\mathrm{Cov}(x))$.
+
+	Inspired by LEACE, I will try to prove the following result for $r(x) = P x + b$:
+	$$\begin{aligned}
+		& \mathrm{Cov}(A r(x), z) = 0 \\
+		& \iff A P \delta = 0 \\
+		& \iff \mathbb{E}[A r(x) \mid z = 1] = \mathbb{E}[A r(x) \mid z = 0]
+	\end{aligned}$$
+	We know that $\mathbb{E}[z] = p$, $\mathbb{E}[x] = p \mu_1 + (1 - p) \mu_0 = \mu$ and $\mathbb{E}[x z] = p \mu_1$. Recall:
+	$$\mathrm{Cov}(u, y) = \mathbb{E}[u y] - \mathbb{E}[u] \mathbb{E}[y]$$
+
+	Let $u := A r(x) = A P x + A b$. Then
+	$$\begin{aligned}
+		\mathbb{E}[u z] & = \mathbb{E}[A P x z + A b z] = A P \mathbb{E}[x z] + A b \mathbb{E}[z] \\
+		& = p A P \mu_1 + p A b ,
+	\end{aligned}$$
+	$$\mathbb{E}[u] = A P \mathbb{E}[x] + A b = A P \mu + A b ,$$
+	$$\mathbb{E}[u] \mathbb{E}[z] = p A P \mu + p A b $$
+	So
+	$$\begin{aligned}
+		\mathrm{Cov}(A r(x), z) & = p A P \mu_1 + p A b - (p A P \mu + p A b) \\
+		& = p A P (\mu_1 - \mu)
+	\end{aligned}$$
+	Since $\mu_1 - \mu = (1 - p) \delta$,
+	$$\mathrm{Cov}(A r(x), z) = p (1 - p) A P \delta$$
+	Also, $p (1 - p) A P \delta = A P \mathrm{Cov}(x, z)$, since $\mathrm{Cov}(x, z) = p (1 - p) \delta$. Since $p (1 - p) > 0$,
+	$$\mathrm{Cov}(A r(x), z) = 0 \iff A P \delta = 0$$
+
+	By linearity, $\mathbb{E}[A r(x) \mid z = i] = A P \mu_i + A b$, so
+	$$\begin{aligned}
+		\mathbb{E}[A r(x) \mid z = 1] - \mathbb{E}[A r(x) \mid z = 0] & = A P (\mu_1 - \mu_0) \\
+		& = A P \delta ,
+	\end{aligned}$$
+	and therefore
+	$$A P \delta = 0 \iff \mathbb{E}[A r(x) \mid z = 1] = \mathbb{E}[A r(x) \mid z = 0]$$
+
+	Okay, $A P \delta = 0$ restricts $P$ and says nothing about $b$, so right now many edits are feasible, and the cost $J$ (how far the edit moves the activations) is what can pick the best one.
+
+	Let $r(x) = P x + b$ and $D = P - I$ (so basically, the distance to doing nothing), and let $M$ be symmetric positive definite (for the definition of the norm). The cost of the edit is
+	$$J(P, b) = \mathbb{E} \left[ \| r(x) - x \|_M^2 \right] ,$$
+	with the $M$-norm defined as $\| v \|_M^2 = v^\top M v$. I am searching for the closed form of $J(P, b)$.
+
+	$$r(x) - x = D x + b = D (x - \mu) + (D \mu + b) ,$$
+	where $D (x - \mu)$ is random with mean $0$ and $D \mu + b$ is constant.
+	$$\begin{aligned}
+		& \| D (x - \mu) + (D \mu + b) \|_M^2 \\
+		& = \left( D (x - \mu) + (D \mu + b) \right)^\top M \left( D (x - \mu) + (D \mu + b) \right)
+	\end{aligned}$$
+	Matrix multiplication distributes over sums, so this equals
+	$$\begin{aligned}
+		& (D (x - \mu))^\top M (D (x - \mu)) + (D (x - \mu))^\top M (D \mu + b) \\
+		& + (D \mu + b)^\top M (D (x - \mu)) + (D \mu + b)^\top M (D \mu + b)
+	\end{aligned}$$
+	Since $(X Y Z)^\top = Z^\top Y^\top X^\top$ and $M^\top = M$, and a scalar equals its own transpose,
+	$$\begin{aligned}
+		& (D (x - \mu))^\top M (D \mu + b) \\
+		& = \left( (D (x - \mu))^\top M (D \mu + b) \right)^\top \\
+		& = (D \mu + b)^\top M^\top D (x - \mu) \\
+		& = (D \mu + b)^\top M D (x - \mu) ,
+	\end{aligned}$$
+	so the two middle terms sum to $2 (D \mu + b)^\top M D (x - \mu)$. Since $(D (x - \mu))^\top = (x - \mu)^\top D^\top$ and $(D \mu + b)^\top M (D \mu + b) = \| D \mu + b \|_M^2$,
+	$$\begin{aligned}
+		& \| D (x - \mu) + (D \mu + b) \|_M^2 \\
+		& = (x - \mu)^\top D^\top M D (x - \mu) \\
+		& + 2 (D \mu + b)^\top M D (x - \mu) + \| D \mu + b \|_M^2
+	\end{aligned}$$
+
+	Expectation is linear, $D$, $M$, $\mu$ and $b$ are constant, and $\mathbb{E}[x - \mu] = \mathbb{E}[x] - \mu = \mu - \mu = 0$, so
+	$$\begin{aligned}
+		J(P, b) = {} & \mathbb{E} \left[ (x - \mu)^\top D^\top M D (x - \mu) \right] \\
+		& + 2 (D \mu + b)^\top M D \mathbb{E}[x - \mu] + \| D \mu + b \|_M^2 \\
+		= {} & \mathbb{E} \left[ (x - \mu)^\top D^\top M D (x - \mu) \right] + \| D \mu + b \|_M^2
+	\end{aligned}$$
+
+	Now, the term inside the expectation looks like $\| v \|_{D^\top M D}^2$ with $v = x - \mu$. Recall that for vectors $a, c \in \R^d$ and a matrix $N \in \R^{d \times d}$ (not necessarily symmetric positive definite), $\mathrm{tr}(a c^\top) = c^\top a$, so
+	$$\mathrm{tr}(N v v^\top) = \mathrm{tr}((N v) v^\top) = v^\top N v $$
+	Since the trace is linear, it can be swapped with the expectation, and since $\mathbb{E}[(x - \mu)(x - \mu)^\top] = \mathrm{Cov}(x)$,
+	$$\begin{aligned}
+		& \mathbb{E} \left[ (x - \mu)^\top D^\top M D (x - \mu) \right] \\
+		& = \mathbb{E} \left[ \mathrm{tr} \left( D^\top M D (x - \mu)(x - \mu)^\top \right) \right] \\
+		& = \mathrm{tr} \left( D^\top M D \mathbb{E} \left[ (x - \mu)(x - \mu)^\top \right] \right) \\
+		& = \mathrm{tr} \left( D^\top M D \mathrm{Cov}(x) \right)
+	\end{aligned}$$
+	So
+	$$J(P, b) = \mathrm{tr} \left( D^\top M D \mathrm{Cov}(x) \right) + \| D \mu + b \|_M^2$$
+
+	The first term does not depend on $b$. Since $\| D \mu + b \|_M^2 \ge 0$, it is minimized when it is equal to $0$, and because $M$ is positive definite, this happens exactly when $D \mu + b = 0$. Equivalently, the optimal offset is
+	$$b^\star = - D \mu = (I - P) \mu ,$$
+	so every optimal edit leaves the mean in place: $r(\mu) = P \mu + (I - P) \mu = \mu$.
+
+\end{document}
