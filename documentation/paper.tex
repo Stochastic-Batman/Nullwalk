@@ -397,4 +397,252 @@
 	One factor $w^\top \delta$ cancels. $w^\top \delta = \| W \delta \|^2 > 0$, and we get
 	$$J^\star_{\mathrm{LEACE}} = \frac{\| \delta \|_M^2}{w^\top \delta} = \frac{\| \delta \|_M^2}{\delta^\top \mathrm{Cov}(x)^\dagger \delta}$$
 
+	\section{Nullwalk closed form}
+
+	As we have already stated these assumptions, I will not restate them unless I relax them for some reason (I see no reason to do so at this point): $M$ is symmetric positive definite, $p \in (0, 1)$, $\delta \ne 0$, $A \in \R^{k \times d}$ has full row rank $k \le d$, and $\mathrm{Cov}(x)$ is invertible.
+
+	I showed that Nullwalk is never more expensive than LEACE. I will now try to find the optimal edit itself, and maybe even measure exactly how much cheaper it is.
+
+	Every optimal edit uses $b^\star = - D \mu$, and the constraint does not involve $b$ either, so the Nullwalk problem becomes
+	$$\begin{aligned}
+		& \min_{D \in \R^{d \times d}} \mathrm{tr} \left( D^\top M D \mathrm{Cov}(x) \right) \\
+		& \text{s.t. } A \underbrace{(I + D)}_{P} \delta = 0
+	\end{aligned}$$
+	Assume $A \delta \ne 0$ (if $A \delta = 0$, then $D = 0$ is feasible and costs nothing, so there is nothing to erase). Expanding the constraint gives $A \delta + A D \delta = 0$, so $A D \delta = - A \delta$, or we can say we have $k$ linear equations: with
+	$$A = \begin{pmatrix} a_1^\top \\ \vdots \\ a_k^\top \end{pmatrix}$$
+	$$a_i^\top D \delta = - a_i^\top \delta \text{ for all } i \in \{1, \dots, k\}$$
+	To reduce clutter, let $f(D) := \mathrm{tr} \left( D^\top M D \mathrm{Cov}(x) \right)$, so the problem becomes
+	$$\min_{D \in \R^{d \times d}} f(D) \text{ s.t. } A D \delta = - A \delta$$
+
+	Suppose $D^\star$ is optimal and there exists a direction $H$ such that $A H \delta = 0$ (we can follow $H$ without leaving the constraint set). Write
+	$$\mathcal{K} = \{ H \in \R^{d \times d} : A H \delta = 0 \}$$
+	for the set of allowed directions. $\mathcal{K}$ is a linear subspace, and if $D$ is feasible and $H \in \mathcal{K}$, then $D + \varepsilon H$ is feasible for every $\varepsilon \in \R$.
+
+	For any $D$ and $H$:
+	$$\begin{aligned}
+		f(D + \varepsilon H) & = \mathrm{tr} \left( D^\top M D \mathrm{Cov}(x) \right) \\
+		& + \varepsilon \mathrm{tr} \left( H^\top M D \mathrm{Cov}(x) \right) \\
+		& + \varepsilon \mathrm{tr} \left( D^\top M H \mathrm{Cov}(x) \right) \\
+		& + \varepsilon^2 \mathrm{tr} \left( H^\top M H \mathrm{Cov}(x) \right)
+	\end{aligned}$$
+	The trace equals the trace of the transpose, and $M$ and $\mathrm{Cov}(x)$ are symmetric, so
+	$$\begin{aligned}
+		\mathrm{tr} \left( D^\top M H \mathrm{Cov}(x) \right) & = \mathrm{tr} \left( \mathrm{Cov}(x) H^\top M D \right) \\
+		& = \mathrm{tr} \left( H^\top M D \mathrm{Cov}(x) \right)
+	\end{aligned}$$
+	where the last step was the cyclic property. Recall the Frobenius inner product for matrices:
+	$$\langle X, Y \rangle_F = \sum_{i, j} X_{ij} Y_{ij} = \mathrm{tr}(X^\top Y)$$
+	Hence
+	$$\begin{aligned}
+		f(D + \varepsilon H) = f(D) & + 2 \varepsilon \langle H, M D \mathrm{Cov}(x) \rangle_F \\
+		& + \varepsilon^2 f(H)
+	\end{aligned}$$
+
+	Let $D^\star$ be optimal and $H \in \mathcal{K}$. Then $q(\varepsilon) = f(D^\star + \varepsilon H)$ is minimal at $\varepsilon = 0$, that is, $q(\varepsilon) \ge q(0)$ for all $\varepsilon \in \R$.
+	$$q(\varepsilon) = f(D^\star) + 2 \varepsilon a + \varepsilon^2 f(H)$$
+	with $a := \langle H, M D^\star \mathrm{Cov}(x) \rangle_F$, and $f(H) \ge 0$ (shown below). If $a \ne 0$, take $\varepsilon$ small with the opposite sign of $a$: if $f(H) > 0$, any $0 < |\varepsilon| < \frac{2 |a|}{f(H)}$ works, but if $f(H) = 0$, any $\varepsilon$ of the correct sign works. Then
+	$$2 \varepsilon a + \varepsilon^2 f(H) < 0 \implies q(\varepsilon) < q(0)$$
+	which is a contradiction, therefore
+	$$\langle H, M D^\star \mathrm{Cov}(x) \rangle_F = 0 \text{ for all } H \in \mathcal{K}$$
+	so $M D^\star \mathrm{Cov}(x) \in \mathcal{K}^\perp$.
+
+	$$\begin{aligned}
+		a_i^\top H \delta & = \mathrm{tr} \left( a_i^\top H \delta \right) = \mathrm{tr} \left( \delta a_i^\top H \right) \\
+		& = \langle a_i \delta^\top, H \rangle_F
+	\end{aligned}$$
+	so $\mathcal{K}$ is the set of matrices orthogonal to the $k$ matrices $a_1 \delta^\top, \dots, a_k \delta^\top$, so
+	$$\mathcal{K} = \left( \mathrm{span} \{ a_i \delta^\top \} \right)^\perp$$
+	$(S^\perp)^\perp = \mathrm{span}(S)$, so
+	$$\begin{aligned}
+		\mathcal{K}^\perp & = \mathrm{span} \{ a_i \delta^\top \} \\
+		& = \left\{ \sum_{i = 1}^k \nu_i a_i \delta^\top : \nu \in \R^k \right\} \\
+		& = \{ A^\top \nu \delta^\top : \nu \in \R^k \}
+	\end{aligned}$$
+	With the above, there exists $\nu \in \R^k$ such that
+	$$M D^\star \mathrm{Cov}(x) = A^\top \nu \delta^\top$$
+	(so $\nu$ is the Lagrange multiplier).
+
+	$M$ and $\mathrm{Cov}(x)$ are invertible. Once again, define $w := \mathrm{Cov}(x)^{-1} \delta$. Since $\mathrm{Cov}(x)^{-1}$ is symmetric, $\delta^\top \mathrm{Cov}(x)^{-1} = w^\top$, so
+	$$D^\star = M^{-1} A^\top \nu w^\top$$
+	Plugging this into the constraint $A D^\star \delta = - A \delta$:
+	$$A \left( M^{-1} A^\top \nu (w^\top \delta) \right) = - A \delta$$
+	and $w^\top \delta > 0$ (as we have shown before).
+
+	For $y \ne 0$,
+	$$y^\top (A M^{-1} A^\top) y = (A^\top y)^\top M^{-1} (A^\top y) > 0$$
+	as $A^\top y \ne 0$ (full row rank means the rows of $A$ are linearly independent) and $M^{-1}$ is positive definite, so $A M^{-1} A^\top$ is positive definite, hence invertible, so
+	$$\nu = - \frac{(A M^{-1} A^\top)^{-1} A \delta}{w^\top \delta}$$
+	and with this, we get
+	$$D^\star = - \frac{M^{-1} A^\top (A M^{-1} A^\top)^{-1} A \delta w^\top}{w^\top \delta}$$
+	and we already know $b^\star = - D^\star \mu$, so the edit becomes
+	$$\begin{aligned}
+		r^\star(x) = x & - M^{-1} A^\top (A M^{-1} A^\top)^{-1} A \delta \\
+		& \times \frac{w^\top (x - \mu)}{w^\top \delta}
+	\end{aligned}$$
+	A quick feasibility check:
+	$$\begin{aligned}
+		A D^\star \delta & = - A M^{-1} A^\top (A M^{-1} A^\top)^{-1} A \delta \frac{w^\top \delta}{w^\top \delta} \\
+		& = - A \delta
+	\end{aligned}$$
+
+	I assumed that the optimum existed, and I think I can now drop that assumption. Take any feasible $D$. Then $H = D - D^\star$ satisfies $A H \delta = - A \delta + A \delta = 0$, so $H \in \mathcal{K}$ and $D = D^\star + H$. With $\varepsilon = 1$:
+	$$\begin{aligned}
+		f(D) & = f(D^\star) + 2 \langle H, M D^\star \mathrm{Cov}(x) \rangle_F + f(H) \\
+		& = f(D^\star) + f(H)
+	\end{aligned}$$
+	$M D^\star \mathrm{Cov}(x) = A^\top \nu \delta^\top \in \mathcal{K}^\perp$ and $H \in \mathcal{K}$, so the middle term is zero. By the cyclic property,
+	$$\begin{aligned}
+		f(H) & = \mathrm{tr} \left( H^\top M H \mathrm{Cov}(x) \right) \\
+		& = \left\| M^{1/2} H \mathrm{Cov}(x)^{1/2} \right\|_F^2 \ge 0
+	\end{aligned}$$
+	so $D^\star$ is a minimizer, since $f(D^\star) \le f(D)$ for every feasible $D$, and it is unique: $f(D) = f(D^\star)$ forces $M^{1/2} H \mathrm{Cov}(x)^{1/2} = 0$, hence $H = 0$, because both square roots are invertible.
+
+	With $A = I$,
+	$$M^{-1} A^\top (A M^{-1} A^\top)^{-1} A = M^{-1} (M^{-1})^{-1} = I$$
+	so
+	$$D^\star = - \frac{\delta w^\top}{w^\top \delta}$$
+	which is binary LEACE. Unlike LEACE, the Nullwalk edit depends on $M$.
+
+	Let me introduce $E_A$ to avoid notational clutter:
+	$$E_A := M^{-1} A^\top (A M^{-1} A^\top)^{-1} A$$
+	so that
+	$$D^\star = - \frac{E_A \delta w^\top}{w^\top \delta} \text{ with } w = \mathrm{Cov}(x)^{-1} \delta$$
+	LEACE is the special case $E_A = I$.
+	$$\begin{aligned}
+		E_A^2 = {} & M^{-1} A^\top (A M^{-1} A^\top)^{-1} \\
+		& \underbrace{A M^{-1} A^\top (A M^{-1} A^\top)^{-1}}_{= I} A \\
+		= {} & M^{-1} A^\top (A M^{-1} A^\top)^{-1} A = E_A
+	\end{aligned}$$
+	So $E_A$ is idempotent, but I also believe it is $M$-orthogonal, that is, $M E_A = E_A^\top M$:
+	$$\begin{aligned}
+		M E_A & = M M^{-1} A^\top (A M^{-1} A^\top)^{-1} A \\
+		& = A^\top (A M^{-1} A^\top)^{-1} A
+	\end{aligned}$$
+	$$\begin{aligned}
+		E_A^\top M & = \left( M^{-1} A^\top (A M^{-1} A^\top)^{-1} A \right)^\top M \\
+		& = A^\top \left( (A M^{-1} A^\top)^{-1} \right)^\top A (M^{-1})^\top M \\
+		& = A^\top (A M^{-1} A^\top)^{-1} A \underbrace{M^{-1} M}_{= I}
+	\end{aligned}$$
+	since $M^{-1}$ is symmetric (and therefore so are $A M^{-1} A^\top$ and its inverse). So $M E_A = E_A^\top M$, hence $E_A$ is $M$-orthogonal.
+
+	Okay, now let's try to compute the optimal cost $J^\star_A = J(P^\star, b^\star)$. The offset term is zero, since $b^\star = - D^\star \mu$.
+	$$\begin{aligned}
+		D^{\star \top} M D^\star & = \frac{w (E_A \delta)^\top M (E_A \delta) w^\top}{(w^\top \delta)^2} \\
+		& = \frac{\| E_A \delta \|_M^2}{(w^\top \delta)^2} w w^\top
+	\end{aligned}$$
+	By the cyclic property:
+	$$\begin{aligned}
+		\mathrm{tr} \left( w w^\top \mathrm{Cov}(x) \right) & = w^\top \mathrm{Cov}(x) w \\
+		& = \delta^\top \mathrm{Cov}(x)^{-1} \mathrm{Cov}(x) \mathrm{Cov}(x)^{-1} \delta \\
+		& = \delta^\top \mathrm{Cov}(x)^{-1} \delta = w^\top \delta
+	\end{aligned}$$
+	One factor $w^\top \delta$ cancels, and we get
+	$$J^\star_A = \frac{\| E_A \delta \|_M^2}{w^\top \delta} = \frac{\| E_A \delta \|_M^2}{\delta^\top \mathrm{Cov}(x)^{-1} \delta}$$
+	We know
+	$$J^\star_{\mathrm{LEACE}} = \frac{\| \delta \|_M^2}{w^\top \delta}$$
+	The ratio of the losses is
+	$$\rho(A) := \frac{J^\star_A}{J^\star_{\mathrm{LEACE}}} = \frac{\| E_A \delta \|_M^2}{\| \delta \|_M^2}$$
+	The common denominator $w^\top \delta$ decides how expensive both edits are, but not how much Nullwalk saves relative to LEACE.
+
+	I'd like to find bounds. What does the edit do to the class difference?
+	$$\begin{aligned}
+		P^\star \delta & = \delta - E_A \delta \frac{w^\top \delta}{w^\top \delta} \\
+		& = \delta - E_A \delta = (I - E_A) \delta
+	\end{aligned}$$
+	$(I - E_A) \delta$ is what Nullwalk leaves of the class difference, and $E_A \delta$ is what Nullwalk removes from it.
+
+	For any vectors $a$ and $c$, using $M = M^\top$:
+	$$\| a + c \|_M^2 = \| a \|_M^2 + 2 \langle a, c \rangle_M + \| c \|_M^2$$
+	Because
+	$$\begin{aligned}
+		\langle E_A \delta, (I - E_A) \delta \rangle_M & = \delta^\top E_A^\top M (I - E_A) \delta \\
+		& = \delta^\top M E_A (I - E_A) \delta \\
+		& = \delta^\top M (E_A - E_A^2) \delta = 0
+	\end{aligned}$$
+	and $E_A \delta + (I - E_A) \delta = \delta$,
+	$$\| \delta \|_M^2 = \| E_A \delta \|_M^2 + \| (I - E_A) \delta \|_M^2$$
+	which gives (dividing by $\| \delta \|_M^2 > 0$)
+	$$\rho(A) = 1 - \frac{\| (I - E_A) \delta \|_M^2}{\| \delta \|_M^2}$$
+	Both $\rho(A)$ and $\frac{\| (I - E_A) \delta \|_M^2}{\| \delta \|_M^2}$ are $\ge 0$, so $0 \le \rho(A) \le 1$. $1 - \rho(A)$ is the fraction of the class difference that the readers cannot see, and that Nullwalk therefore does not need to remove.
+
+	Case $\rho(A) = 1$: then $\| (I - E_A) \delta \|_M = 0$, and since $M$ is positive definite, $(I - E_A) \delta = 0$, or $\delta \in \mathrm{range}(E_A)$ (if $\delta = E_A v$, then $E_A \delta = E_A^2 v = E_A v = \delta$). Also $\mathrm{range}(E_A) = \mathrm{range}(M^{-1} A^\top)$, as:
+	\begin{itemize}
+		\item $E_A = M^{-1} A^\top \left( (A M^{-1} A^\top)^{-1} A \right)$, so every output of $E_A$ is an output of $M^{-1} A^\top$.
+		\item We have
+		$$\begin{aligned}
+			E_A M^{-1} A^\top & = M^{-1} A^\top (A M^{-1} A^\top)^{-1} (A M^{-1} A^\top) \\
+			& = M^{-1} A^\top
+		\end{aligned}$$
+		so every vector $M^{-1} A^\top y$ is an output of $E_A$.
+	\end{itemize}
+	So
+	$$\begin{aligned}
+		\rho(A) = 1 & \iff \delta = M^{-1} A^\top y \text{ for some } y \in \R^k \\
+		& \iff M \delta \in \mathrm{row}(A)
+	\end{aligned}$$
+	So the readers see the whole class difference, nothing is invisible, and Nullwalk costs exactly as much as LEACE.
+
+	Case $\rho(A) = 0$: then $E_A \delta = 0$, and
+	$$\begin{aligned}
+		E_A \delta & = M^{-1} A^\top \left[ \underbrace{(A M^{-1} A^\top)^{-1}}_{\text{invertible}} (A \delta) \right] = 0 \\
+		& \iff A \delta = 0
+	\end{aligned}$$
+	The rows of $A$ are linearly independent, hence $A^\top$ is injective, and $M^{-1}$ is invertible, so $M^{-1} A^\top$ is injective. The readers already see no class difference, so there is nothing to remove. We assumed $A \delta \ne 0$ a long time ago, so $\rho(A) > 0$.
+
+	Case $M = I$: then $E_A = A^\top (A A^\top)^{-1} A$, so $E_A^\top = E_A = E_A^2$, and $\mathrm{range}(A^\top) = \mathrm{row}(A)$. A symmetric idempotent matrix is the orthogonal projection onto its range. The direction of the edit:
+	$$r^\star(x) = x - E_A \delta \frac{w^\top (x - \mu)}{w^\top \delta}$$
+	so every activation moves along $E_A \delta$, the orthogonal projection of $\delta$ onto $\mathrm{row}(A)$. This is the component of the class difference lying in the directions the readers look at.
+	$$(I - E_A) \delta \in \ker(A) = \mathrm{row}(A)^\perp$$
+	This part is invisible to the readers and left untouched.
+
+	But what does $\rho(A)$ measure, more intuitively? Let $\theta$ be the angle between $\delta$ and the subspace $\mathrm{row}(A)$, that is, the angle between $\delta$ and its projection $E_A \delta$. Using $\delta^\top E_A \delta = \delta^\top E_A^\top E_A \delta = \| E_A \delta \|^2$:
+	$$\begin{aligned}
+		\cos \theta & = \frac{\delta^\top E_A \delta}{\| \delta \| \| E_A \delta \|} = \frac{\| E_A \delta \|^2}{\| \delta \| \| E_A \delta \|} \\
+		& = \frac{\| E_A \delta \|}{\| \delta \|}
+	\end{aligned}$$
+	so
+	$$\rho(A) = \frac{\| E_A \delta \|^2}{\| \delta \|^2} = \cos^2 \theta$$
+	so $\theta = 0^\circ \implies \delta \in \mathrm{row}(A)$, so $\rho(A) = 1$, and $\theta = 90^\circ \implies \delta \perp \mathrm{row}(A) \implies A \delta = 0$, so $\rho(A) = 0$. For $\theta \in (0^\circ, 90^\circ)$, $\rho(A)$ is the share of the class difference, as a squared length, that points into the readers' directions.
+
+	For general $M$, the same picture holds, with angles and lengths measured in $\langle \cdot, \cdot \rangle_M$.
+
+	LEACE's $P^\star$ is a projection: applying it twice is no better than applying it once. Nullwalk leaves part of the difference behind, $(I - E_A) \delta \in \ker(A)$, so does a second application of the same edit leave the data alone, or does it act on that leftover? And what if we apply Nullwalk again to the activations we already edited?
+
+	An example of why the Nullwalk $P^\star$ is not idempotent: let $d = 2$, $M = I$, $\mathrm{Cov}(x) = I$, $\delta = (1, 1)^\top$ and $A = \begin{pmatrix} 1 & 0 \end{pmatrix}$. Then
+	$$w = \mathrm{Cov}(x)^{-1} \delta = \begin{pmatrix} 1 \\ 1 \end{pmatrix} \text{ and } w^\top \delta = 2$$
+	$$E_A = A^\top (A A^\top)^{-1} A = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$$
+	$$E_A \delta = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$$
+	$$D^\star = - \frac{1}{2} \begin{pmatrix} 1 \\ 0 \end{pmatrix} \begin{pmatrix} 1 & 1 \end{pmatrix} = \begin{pmatrix} - \frac{1}{2} & - \frac{1}{2} \\ 0 & 0 \end{pmatrix}$$
+	$$P^\star = I + D^\star = \begin{pmatrix} \frac{1}{2} & - \frac{1}{2} \\ 0 & 1 \end{pmatrix}$$
+	and
+	$$(P^\star)^2 = \begin{pmatrix} \frac{1}{4} & - \frac{3}{4} \\ 0 & 1 \end{pmatrix} \ne P^\star$$
+
+	The edit moves each point along the visible direction $E_A \delta$ by $\frac{w^\top (x - \mu)}{w^\top \delta}$. $w^\top$ responds to the whole class difference, including the invisible leftover. After one application, the leftover $(I - E_A) \delta$ is still there, and its score $w^\top (I - E_A) \delta$ is generally not $0$. So the second time we apply the edit, the two classes are seen as different and move again along the visible direction, which breaks the constraint. For LEACE, the leftover is $0$, and the second application sees no difference at all.
+
+	$(P^\star)^2 = I + 2 D^\star + (D^\star)^2$, so $(P^\star)^2 = P^\star$ is equivalent to $(D^\star)^2 = - D^\star$, and
+	$$(D^\star)^2 = \frac{E_A \delta (w^\top E_A \delta) w^\top}{(w^\top \delta)^2}$$
+	which equals (if $E_A \delta \ne 0$)
+	$$- D^\star = \frac{E_A \delta w^\top}{w^\top \delta}$$
+	exactly when $w^\top E_A \delta = w^\top \delta$, so
+	$$(P^\star)^2 = P^\star \iff w^\top (I - E_A) \delta = 0$$
+	The edit is idempotent exactly when the invisible leftover carries no score. In the example,
+	$$w^\top (I - E_A) \delta = \begin{pmatrix} 1 & 1 \end{pmatrix} \begin{pmatrix} 0 \\ 1 \end{pmatrix} = 1$$
+
+	What happens when we fit Nullwalk on edited activations? Let $x' = P^\star x + b^\star$ be the edited activations, with the same labels $z$. Then $\mu_i' = P^\star \mu_i + b^\star$, so
+	$$\delta' = \mu_1' - \mu_0' = P^\star \delta = (I - E_A) \delta$$
+	and $A \delta' = 0$ because the leftover lies in $\ker(A)$. The feasible set for $x'$ is $\{ (P, b) : P \delta' \in \ker(A) \}$. Since $\delta' \in \ker(A)$, the identity edit is feasible, and it is optimal, as no cost is negative and
+	$$J(I, 0) = \mathbb{E} \left[ \| x' - x' \|_M^2 \right] = 0$$
+	Any other optimal edit must also have a cost of $0$, so $\| D \mu' + b \|_M^2 = 0$ and
+	$$\begin{aligned}
+		\mathrm{tr} \left( D^\top M D \mathrm{Cov}(x') \right) & = \left\| M^{1/2} D \mathrm{Cov}(x')^{1/2} \right\|_F^2 \\
+		& = 0
+	\end{aligned}$$
+	so $D$ is zero on every direction in which $x'$ varies. Every optimal refit acts as the identity. This is the $A \delta = 0$ case we excluded already: the edited activations satisfy the constraint, so doing nothing is allowed and free.
+
+	So applying the edit once is stable: refitting on the edited activations changes nothing. Applying the same fitted edit twice is not safe, as it can undo the guarantee. This matters for the experiments in two cases:
+	\begin{enumerate}
+		\item Editing several layers: if we edit at layers $\ell_1 < \ell_2$, we must not reuse one fitted $(P^\star, b^\star)$ at both. Fit the eraser at $\ell_2$ on activations that were already edited at $\ell_1$. The LEACE paper fits its ``concept scrubbing'' in the same sequential way, layer by layer. Refitting at the same layer is a no-op, so sequential fitting is consistent.
+		\item The forward ``hook'' must apply the edit exactly once per layer and position. A stray double application would put back the visible class difference.
+	\end{enumerate}
+
 \end{document}
