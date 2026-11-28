@@ -50,7 +50,7 @@
 
 	$$\begin{aligned}
 		\mathbb{E}[x z] & = p \mathbb{E}[x z \mid z = 1] + (1 - p) \mathbb{E}[x z \mid z = 0] \\
-		& = p \mu_1 ,
+		& = p \mu_1
 	\end{aligned}$$
 	since the second term is $0$.
 
@@ -59,7 +59,7 @@
 	Since $\mu = p \mu_1 + (1 - p) \mu_0$,
 	$$\begin{aligned}
 		p (\mu_1 - \mu) & = p \left( \mu_1 - p \mu_1 - (1 - p) \mu_0 \right) \\
-		& = p (1 - p) (\mu_1 - \mu_0) = p (1 - p) \delta ,
+		& = p (1 - p) (\mu_1 - \mu_0) = p (1 - p) \delta
 	\end{aligned}$$
 	so
 	$$\mathrm{Cov}(x, z) = p (1 - p) \delta$$
@@ -73,7 +73,7 @@
 	$$\mathbb{E}_z \left[ \mathbb{E}[x \mid z] \right] = (1 - p) \mu_0 + p \mu_1 = \mu$$
 
 	$$\begin{aligned}
-		\mu_0 - \mu & = p (\mu_0 - \mu_1) , \\
+		\mu_0 - \mu & = p (\mu_0 - \mu_1) \\
 		\mu_1 - \mu & = (1 - p) (\mu_1 - \mu_0)
 	\end{aligned}$$
 
@@ -88,7 +88,7 @@
 	\end{aligned}$$
 
 	So
-	$$\mathrm{Cov}(x) = \mathbb{E}_z \left[ \mathrm{Cov}(x \mid z) \right] + p (1 - p) \delta \delta^\top ,$$
+	$$\mathrm{Cov}(x) = \mathbb{E}_z \left[ \mathrm{Cov}(x \mid z) \right] + p (1 - p) \delta \delta^\top$$
 	where
 	$$\begin{aligned}
 		\mathbb{E}_z \left[ \mathrm{Cov}(x \mid z) \right] = {} & p \mathrm{Cov}(x \mid z = 1) \\
@@ -100,7 +100,7 @@
 	A system $A u = y$ is solvable if and only if $y \in \mathrm{range}(A)$, so I need to check whether $\delta \in \mathrm{range}(\mathrm{Cov}(x))$.
 
 	Well, we know that $\mathrm{Cov}(x)$ is symmetric, so its range is the orthogonal complement of its kernel:
-	$$\mathrm{range}(\mathrm{Cov}(x)) = \ker(\mathrm{Cov}(x))^\perp ,$$
+	$$\mathrm{range}(\mathrm{Cov}(x)) = \ker(\mathrm{Cov}(x))^\perp$$
 	so we need to show that $v^\top \delta = 0$ for all $v \in \ker(\mathrm{Cov}(x))$.
 
 	Assume $\mathrm{Cov}(x) v = 0$. Then
@@ -122,10 +122,10 @@
 	Let $u := A r(x) = A P x + A b$. Then
 	$$\begin{aligned}
 		\mathbb{E}[u z] & = \mathbb{E}[A P x z + A b z] = A P \mathbb{E}[x z] + A b \mathbb{E}[z] \\
-		& = p A P \mu_1 + p A b ,
+		& = p A P \mu_1 + p A b
 	\end{aligned}$$
-	$$\mathbb{E}[u] = A P \mathbb{E}[x] + A b = A P \mu + A b ,$$
-	$$\mathbb{E}[u] \mathbb{E}[z] = p A P \mu + p A b $$
+	$$\mathbb{E}[u] = A P \mathbb{E}[x] + A b = A P \mu + A b$$
+	$$\mathbb{E}[u] \mathbb{E}[z] = p A P \mu + p A b$$
 	So
 	$$\begin{aligned}
 		\mathrm{Cov}(A r(x), z) & = p A P \mu_1 + p A b - (p A P \mu + p A b) \\
@@ -139,7 +139,7 @@
 	By linearity, $\mathbb{E}[A r(x) \mid z = i] = A P \mu_i + A b$, so
 	$$\begin{aligned}
 		\mathbb{E}[A r(x) \mid z = 1] - \mathbb{E}[A r(x) \mid z = 0] & = A P (\mu_1 - \mu_0) \\
-		& = A P \delta ,
+		& = A P \delta
 	\end{aligned}$$
 	and therefore
 	$$A P \delta = 0 \iff \mathbb{E}[A r(x) \mid z = 1] = \mathbb{E}[A r(x) \mid z = 0]$$
@@ -147,10 +147,10 @@
 	Okay, $A P \delta = 0$ restricts $P$ and says nothing about $b$, so right now many edits are feasible, and the cost $J$ (how far the edit moves the activations) is what can pick the best one.
 
 	Let $r(x) = P x + b$ and $D = P - I$ (so basically, the distance to doing nothing), and let $M$ be symmetric positive definite (for the definition of the norm). The cost of the edit is
-	$$J(P, b) = \mathbb{E} \left[ \| r(x) - x \|_M^2 \right] ,$$
+	$$J(P, b) = \mathbb{E} \left[ \| r(x) - x \|_M^2 \right]$$
 	with the $M$-norm defined as $\| v \|_M^2 = v^\top M v$. I am searching for the closed form of $J(P, b)$.
 
-	$$r(x) - x = D x + b = D (x - \mu) + (D \mu + b) ,$$
+	$$r(x) - x = D x + b = D (x - \mu) + (D \mu + b)$$
 	where $D (x - \mu)$ is random with mean $0$ and $D \mu + b$ is constant.
 	$$\begin{aligned}
 		& \| D (x - \mu) + (D \mu + b) \|_M^2 \\
@@ -166,7 +166,7 @@
 		& (D (x - \mu))^\top M (D \mu + b) \\
 		& = \left( (D (x - \mu))^\top M (D \mu + b) \right)^\top \\
 		& = (D \mu + b)^\top M^\top D (x - \mu) \\
-		& = (D \mu + b)^\top M D (x - \mu) ,
+		& = (D \mu + b)^\top M D (x - \mu)
 	\end{aligned}$$
 	so the two middle terms sum to $2 (D \mu + b)^\top M D (x - \mu)$. Since $(D (x - \mu))^\top = (x - \mu)^\top D^\top$ and $(D \mu + b)^\top M (D \mu + b) = \| D \mu + b \|_M^2$,
 	$$\begin{aligned}
@@ -183,7 +183,7 @@
 	\end{aligned}$$
 
 	Now, the term inside the expectation looks like $\| v \|_{D^\top M D}^2$ with $v = x - \mu$. Recall that for vectors $a, c \in \R^d$ and a matrix $N \in \R^{d \times d}$ (not necessarily symmetric positive definite), $\mathrm{tr}(a c^\top) = c^\top a$, so
-	$$\mathrm{tr}(N v v^\top) = \mathrm{tr}((N v) v^\top) = v^\top N v $$
+	$$\mathrm{tr}(N v v^\top) = \mathrm{tr}((N v) v^\top) = v^\top N v$$
 	Since the trace is linear, it can be swapped with the expectation, and since $\mathbb{E}[(x - \mu)(x - \mu)^\top] = \mathrm{Cov}(x)$,
 	$$\begin{aligned}
 		& \mathbb{E} \left[ (x - \mu)^\top D^\top M D (x - \mu) \right] \\
@@ -195,7 +195,206 @@
 	$$J(P, b) = \mathrm{tr} \left( D^\top M D \mathrm{Cov}(x) \right) + \| D \mu + b \|_M^2$$
 
 	The first term does not depend on $b$. Since $\| D \mu + b \|_M^2 \ge 0$, it is minimized when it is equal to $0$, and because $M$ is positive definite, this happens exactly when $D \mu + b = 0$. Equivalently, the optimal offset is
-	$$b^\star = - D \mu = (I - P) \mu ,$$
+	$$b^\star = - D \mu = (I - P) \mu$$
 	so every optimal edit leaves the mean in place: $r(\mu) = P \mu + (I - P) \mu = \mu$.
+
+	\section{Nullwalk is LEACE when $A = I$}
+
+	Currently, our problem looks like this ($P \in \R^{d \times d}$, $b \in \R^d$):
+	$$\min_{P, b} J(P, b) \text{ with constraint } \mathrm{Cov}(A r(x), z) = 0$$
+	with $r(x) = P x + b$, $D = P - I$ and
+	$$J(P, b) = \mathrm{tr} \left( D^\top M D \mathrm{Cov}(x) \right) + \| D \mu + b \|_M^2$$
+	When $A = I$, we have $A r(x) = r(x)$, and the problem becomes
+	$$\begin{aligned}
+		& \min_{P, b} \mathbb{E} \left[ \| P x + b - x \|_M^2 \right] \\
+		& \text{with constraint } \mathrm{Cov}(P x + b, z) = 0
+	\end{aligned}$$
+	Since $\mathrm{Cov}(A r(x), z) = 0 \iff A P \delta = 0$, with $A = I$ the constraint is equivalent to $P \delta = 0$.
+
+	LEACE finds the optimal eraser in two steps: centered data first (Theorem 4.2), then the extension to uncentered data with an offset (Theorem 4.3). Our $x$ is not centered and our edit has an offset $b$, so Theorem 4.3 is the one we need.
+
+	Theorem 4.3 of the LEACE paper in our notation: let $x$ and $Z$ be random vectors with values in $\R^d$ and $\R^K$, each with finite second moment. Let $M \in \R^{d \times d}$ be positive semi-definite, let $W = \left( \mathrm{Cov}(x)^{1/2} \right)^\dagger$, and let
+	$$P_{W \mathrm{Cov}(x, Z)} = \left( W \mathrm{Cov}(x, Z) \right) \left( W \mathrm{Cov}(x, Z) \right)^\dagger$$
+	be the orthogonal projection onto the column space of $W \mathrm{Cov}(x, Z)$. Define
+	$$\begin{aligned}
+		P^\star & = I - W^\dagger P_{W \mathrm{Cov}(x, Z)} W \\
+		b^\star & = \mu - P^\star \mu
+	\end{aligned}$$
+	Then $(P^\star, b^\star)$ minimizes $\mathbb{E} \left[ \| P x + b - x \|_M^2 \right]$ subject to $\mathrm{Cov}(P x + b, Z) = 0$.
+
+	For us $Z = z$, so $K = 1$, so Theorem 4.3 minimizes
+	$$\mathbb{E} \left[ \| P x + b - x \|_M^2 \right] = J(P, b)$$
+	and
+	$$\mathrm{Cov}(P x + b, Z) = 0 \text{ reads } \mathrm{Cov}(P x + b, z) = 0$$
+
+	Two optimization problems with the same objective and the same feasible set have the same minimizers, and by the theorem above, $(P^\star, b^\star)$ is a minimizer, so it also solves Nullwalk with $A = I$, and the edit it defines is
+	$$\begin{aligned}
+		r_{\mathrm{LEACE}}(x) & = P^\star x + b^\star \\
+		& = x - W^\dagger P_{W \mathrm{Cov}(x, z)} W (x - \mu)
+	\end{aligned}$$
+	Consistency check for my optimal $b^\star$:
+	$$\mu - P^\star \mu = - (P^\star - I) \mu = - D^\star \mu = b^\star$$
+
+	For the justification of calling the constraint ``linear erasure'', encode $Z = (1 - z, z)^\top \in \{0, 1\}^2$ (each class with nonzero probability, since $p \in (0, 1)$). We use Definition 2.3 from the LEACE paper: $r(x)$ linearly guards $Z$ if, for every non-negative loss that is convex in its first argument, no linear predictor $\eta(r(x)) = c + V r(x)$, with $V \in \R^{K \times d}$, achieves a lower expected loss on $(r(x), Z)$ than the best constant predictor can.
+
+	Also, by Theorem 3.4 of the LEACE paper: if each class probability is nonzero, then $\mathbb{E}[x \mid z = j] = \mathbb{E}[x]$ for every class $j$ if and only if $\mathrm{Cov}(x, Z) = 0$. And by Theorem 4.1 of the LEACE paper: for an affine $r(x) = P x + b$, $r(x)$ linearly guards $Z$ if and only if the columns of $\mathrm{Cov}(x, Z) \in \R^{d \times K}$ lie in $\ker(P)$.
+
+	$\mathrm{Cov}(x, 1 - z) = - \mathrm{Cov}(x, z)$, so
+	$$\mathrm{Cov}(x, Z) = \begin{pmatrix} - p (1 - p) \delta & p (1 - p) \delta \end{pmatrix}$$
+	and both columns are nonzero multiples of $\delta$, so by Theorem 4.1 of the LEACE paper:
+	$$\begin{aligned}
+		r(x) \text{ linearly guards } Z & \iff P \delta = 0 \\
+		& \iff \mathrm{Cov}(r(x), z) = 0
+	\end{aligned}$$
+	So Nullwalk with $A = I$ says: after the edit, no linear classifier can tell the two classes apart better than a constant predictor.
+
+	Okay, now ``back to $A$''!
+
+	I showed that $\mathrm{Cov}(A r(x), z) = p (1 - p) A P \delta$, and since $p (1 - p) > 0$, the Nullwalk constraint is equivalent to $A P \delta = 0$. The cost $J(P, b)$ does not contain $A$ at all, so $A$ enters the problem only through the constraint. I would like to know how much of $A$ the problem ``sees'', so I will rewrite the constraint with the kernel:
+	$$\mathrm{Cov}(A r(x), z) = 0 \iff P \delta \in \ker(A)$$
+	as follows trivially from $A P \delta = 0$: $A (P \delta) = 0$ and $\ker(A) = \{ v : A v = 0 \}$, hence $P \delta \in \ker(A)$.
+
+	So $P \delta$ is the class difference that is left after the edit, and LEACE demands $P \delta = 0$, so nothing may be left. Nullwalk allows anything left over, as long as $A$ cannot see it.
+
+	But do two different matrices with the same kernel define the same problem? Let $A \in \R^{k \times d}$ and $A' \in \R^{k' \times d}$ ($k$ and $k'$ may differ, but $A \ne A'$ anyway) with $\ker(A) = \ker(A')$. Denote the feasible set
+	$$\begin{aligned}
+		\mathcal{F}(A) = \{ & (P, b) \in \R^{d \times d} \times \R^d : \\
+		& \mathrm{Cov}(A (P x + b), z) = 0 \}
+	\end{aligned}$$
+	so the Nullwalk problem for $A$ is
+	$$\min_{(P, b) \in \mathcal{F}(A)} J(P, b)$$
+	Since $\mathrm{Cov}(A (P x + b), z) = 0 \iff P \delta \in \ker(A)$, an equivalent way of writing $\mathcal{F}(A)$ is
+	$$\mathcal{F}(A) = \{ (P, b) : P \delta \in \ker(A) \}$$
+	(every $b \in \R^d$ is allowed). Since $\ker(A) = \ker(A')$, $\mathcal{F}(A) = \mathcal{F}(A')$.
+
+	Since $J(P, b)$ does not depend on the readout $A$,
+	$$\min_{(P, b) \in \mathcal{F}(A)} J(P, b) = \min_{(P, b) \in \mathcal{F}(A')} J(P, b)$$
+	so they minimize the same function over the same set, so they have the same minimizers and the same optimal value.
+
+	If $\ker(A) = \{0\}$,
+	$$\begin{aligned}
+		\mathcal{F}(A) & = \{ (P, b) : P \delta \in \ker(A) \} \\
+		& = \{ (P, b) : P \delta = 0 \}
+	\end{aligned}$$
+	which is identical to the $A = I$ case, so the solution is $r_{\mathrm{LEACE}}$.
+
+	For $A$ with full row rank $k \le d$,
+	$$\dim(\ker(A)) = d - \mathrm{rank}(A) = d - k$$
+	so $\dim(\ker(A)) = 0 \implies k = d$, and hence $\ker(A) = \{0\} \iff k = d$.
+
+	To summarize the results above (readout matrices with the same kernel define the same problem):
+	\begin{enumerate}
+		\item We can rescale, reorder or orthonormalize the rows of $A$ as we see fit, as these actions do not change the kernel of the matrix.
+		\item Linearly dependent rows of $A$ change nothing.
+	\end{enumerate}
+	And summarizing $\ker(A) = \{0\} \iff k = d$:
+	\begin{enumerate}
+		\item If the readout has as many independent directions as the space itself, nothing is hidden from it, and Nullwalk gives the same as LEACE.
+		\item This is not a direct corollary, but I wanted to use the J-lens as $A$, because I really enjoy the idea of the J-lens, but the full J-lens matrix is probably invertible, so it would be useless here (maybe the rows of $A$ can be the top-$k$ gradient directions, or the vectors of the refusal tokens?).
+	\end{enumerate}
+
+	This is also not a direct corollary of either, but when I was summarizing the results, I was thinking whether more readers mean a larger edit, so I will try to figure that out now.
+
+	Let $\ker(A) \subseteq \ker(A')$, so $A'$ sees fewer directions than $A$.
+	$$\begin{aligned}
+		(P, b) \in \mathcal{F}(A) & \implies P \delta \in \ker(A) \subseteq \ker(A') \\
+		& \implies (P, b) \in \mathcal{F}(A')
+	\end{aligned}$$
+	so $\mathcal{F}(A) \subseteq \mathcal{F}(A')$. Minimizing $J$ over the larger set gives
+	$$J^\star_{A'} = \inf_{\mathcal{F}(A')} J \le \inf_{\mathcal{F}(A)} J = J^\star_A$$
+	Corollary: $\ker(I) = \{0\} \subseteq \ker(A')$ for every $A'$, hence
+	$$J^\star_{A'} \le J^\star_{\mathrm{LEACE}}$$
+	Because I used $\inf$, there is no assumption that the minimizer exists, and for $A = I$ a minimizer does exist by Theorem 4.3 of the LEACE paper.
+
+	So adding rows to $A$ shrinks $\ker(A)$ (if they are linearly independent from the existing rows), so the optimal edit can only grow. More rows guard against more readers, but bring the edit closer to LEACE.
+
+	Okay, now I want the LEACE formula adjusted for a binary label. From the LEACE paper: $W = \left( \mathrm{Cov}(x)^{1/2} \right)^\dagger$ and
+	$$r_{\mathrm{LEACE}}(x) = x - W^\dagger P_{W \mathrm{Cov}(x, z)} W (x - \mu)$$
+
+	I did encounter pseudoinverses during my undergraduate studies, but I do not have much experience with them. Every real symmetric matrix is orthogonally diagonalizable, and since $\mathrm{Cov}(x)$ is real symmetric (and positive semi-definite, but that is irrelevant here),
+	$$\mathrm{Cov}(x) = Q \Lambda Q^\top$$
+	with $\Lambda = \mathrm{diag}(\lambda_1, \dots, \lambda_d)$, $\lambda_i \ge 0$ and $Q^\top Q = I$.
+
+	Pseudoinverses of a diagonal matrix are easy: $\Lambda^\dagger$ replaces each nonzero $\lambda_i$ by $1 / \lambda_i$ (and leaves $0$ as $0$), so it undoes scaling. Conjugating by an orthogonal $Q$ does not change this: $(Q B Q^\top)^\dagger = Q B^\dagger Q^\top$.
+
+	Whitening from LEACE:
+	$$W = Q (\Lambda^{1/2})^\dagger Q^\top$$
+	(divide each coordinate by its standard deviation, so every direction ends up with variance $1$). Whitening twice is the pseudoinverse of the covariance: $\left( 1 / \sqrt{\lambda_i} \right)^2 = 1 / \lambda_i$, so
+	$$\begin{aligned}
+		W W & = Q (\Lambda^{1/2})^\dagger (\Lambda^{1/2})^\dagger Q^\top \\
+		& = Q \Lambda^\dagger Q^\top = \mathrm{Cov}(x)^\dagger
+	\end{aligned}$$
+	and
+	$$W^\top W = W W$$
+
+	The pseudoinverse of a pseudoinverse is the original matrix, so
+	$$W^\dagger = \mathrm{Cov}(x)^{1/2} = Q \Lambda^{1/2} Q^\top$$
+	$$W^\dagger W = Q \mathrm{diag}(\mathbf{1}_{\lambda_i > 0}) Q^\top =: \Pi$$
+	Each $\sqrt{\lambda_i}$ cancels against $1 / \sqrt{\lambda_i}$, so $\Pi$ keeps the directions with positive variance and zeroes the rest. It is the orthogonal projection onto $\mathrm{range}(\mathrm{Cov}(x))$.
+
+	Applying $W$ and then $W^\dagger$ therefore loses only the part of a vector that lies in zero-variance directions. We proved that $\delta \in \mathrm{range}(\mathrm{Cov}(x))$, so $\delta$ has no such part:
+	$$W^\dagger W \delta = \Pi \delta = \delta$$
+
+	For a binary label, $\mathrm{Cov}(x, z) = p (1 - p) \delta$ is one column. Let $u := W \delta$, so $u$ is the mean difference measured in whitened coordinates, and
+	$$W \mathrm{Cov}(x, z) = p (1 - p) u$$
+	Since $W$ kills only zero-variance directions ($\ker(W) = \ker(\mathrm{Cov}(x))$), and we know that $\delta \in \mathrm{range}(\mathrm{Cov}(x)) = \ker(\mathrm{Cov}(x))^\perp$ and $\delta \ne 0$, we get $\delta \notin \ker(W)$, so $u \ne 0$.
+
+	Following LEACE, we project onto that one direction:
+	$$P_{W \mathrm{Cov}(x, z)} = (p (1 - p) u) (p (1 - p) u)^\dagger$$
+	is the orthogonal projection onto the column space of $p (1 - p) u$, which is the line through $u$. For $v \ne 0$ and $v \in \R^d$,
+	$$v^\dagger = \frac{v^\top}{v^\top v}$$
+	since this row vector satisfies $v^\dagger v = 1$ (and the four Moore--Penrose conditions). So
+	$$\begin{aligned}
+		P_{W \mathrm{Cov}(x, z)} & = p (1 - p) u \frac{p (1 - p) u^\top}{(p (1 - p))^2 u^\top u} \\
+		& = \frac{u u^\top}{u^\top u}
+	\end{aligned}$$
+
+	Plugging in and un-whitening:
+	$$W^\dagger P_{W \mathrm{Cov}(x, z)} W = \frac{(W^\dagger u)(u^\top W)}{u^\top u}$$
+	$$W^\dagger u = W^\dagger W \delta = \delta$$
+	$$u^\top W = \delta^\top W^\top W = \delta^\top \mathrm{Cov}(x)^\dagger$$
+	Let $w := \mathrm{Cov}(x)^\dagger \delta$. $\mathrm{Cov}(x)^\dagger$ is symmetric (since $\mathrm{Cov}(x) = \mathrm{Cov}(x)^\top$), so $u^\top W = w^\top$, and
+	$$u^\top u = \delta^\top W^\top W \delta = w^\top \delta$$
+	$u \ne 0$, so this is positive. So
+	$$W^\dagger P_{W \mathrm{Cov}(x, z)} W = \frac{\delta w^\top}{w^\top \delta}$$
+	and
+	$$r_{\mathrm{LEACE}}(x) = x - \frac{\delta w^\top}{w^\top \delta} (x - \mu)$$
+
+	Every activation is moved along $\delta$ only: $x$ changes only by a multiple of $\delta$ (since $\frac{w^\top (x - \mu)}{w^\top \delta}$ is a scalar).
+
+	For more intuition, rewrite
+	$$r_{\mathrm{LEACE}}(x) = x - \delta \frac{w^\top (x - \mu)}{w^\top \delta}$$
+	$w^\top (x - \mu)$ is a linear score of how ``behavior-like'' $x$ is. $w^\top \delta$ is the score difference between the two class means. Dividing by it calibrates the move so that the class difference is removed exactly.
+
+	Recall that for any edit $r(x) = P x + b$ with $D = P - I$,
+	$$J(P, b) = \mathrm{tr} \left( D^\top M D \mathrm{Cov}(x) \right) + \| D \mu + b \|_M^2$$
+	$$\begin{aligned}
+		r_{\mathrm{LEACE}}(x) & = x - \delta \frac{w^\top (x - \mu)}{w^\top \delta} \\
+		& = \underbrace{\left( I - \frac{\delta w^\top}{w^\top \delta} \right)}_{P^\star} x + \underbrace{\frac{\delta w^\top}{w^\top \delta} \mu}_{b^\star}
+	\end{aligned}$$
+	so
+	$$\begin{aligned}
+		D^\star & = P^\star - I = - \frac{\delta w^\top}{w^\top \delta} \\
+		b^\star & = - D^\star \mu
+	\end{aligned}$$
+	and $\| D^\star \mu + b^\star \|_M^2 = 0$.
+	$$\begin{aligned}
+		D^{\star \top} M D^\star & = \frac{w \delta^\top M \delta w^\top}{(w^\top \delta)^2} \\
+		& = \frac{\| \delta \|_M^2}{(w^\top \delta)^2} w w^\top
+	\end{aligned}$$
+	where $\frac{\| \delta \|_M^2}{(w^\top \delta)^2}$ is a scalar.
+	$$\mathrm{tr} \left( w w^\top \mathrm{Cov}(x) \right) = w^\top \mathrm{Cov}(x) w$$
+	(I think this is called the cyclic property of the trace).
+	$$\begin{aligned}
+		J(P^\star, b^\star) & = \frac{\| \delta \|_M^2}{(w^\top \delta)^2} \mathrm{tr} \left( w w^\top \mathrm{Cov}(x) \right) \\
+		& = \frac{\| \delta \|_M^2}{(w^\top \delta)^2} w^\top \mathrm{Cov}(x) w
+	\end{aligned}$$
+	Since $w = \mathrm{Cov}(x)^\dagger \delta$, $\mathrm{Cov}(x)^\dagger$ is symmetric, and $B^\dagger B B^\dagger = B^\dagger$,
+	$$\begin{aligned}
+		w^\top \mathrm{Cov}(x) w & = \delta^\top \mathrm{Cov}(x)^\dagger \mathrm{Cov}(x) \mathrm{Cov}(x)^\dagger \delta \\
+		& = \delta^\top \mathrm{Cov}(x)^\dagger \delta = w^\top \delta
+	\end{aligned}$$
+	One factor $w^\top \delta$ cancels. $w^\top \delta = \| W \delta \|^2 > 0$, and we get
+	$$J^\star_{\mathrm{LEACE}} = \frac{\| \delta \|_M^2}{w^\top \delta} = \frac{\| \delta \|_M^2}{\delta^\top \mathrm{Cov}(x)^\dagger \delta}$$
 
 \end{document}
